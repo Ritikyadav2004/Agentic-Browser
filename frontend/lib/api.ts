@@ -1,6 +1,8 @@
 import type { SearchHistoryResponse, SearchProductsResponse } from "@/types/api";
 
-const API_BASE = "/api";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL
+  ? `${process.env.NEXT_PUBLIC_API_BASE_URL.replace(/\/$/, "")}/api`
+  : "/api";
 
 export async function searchProducts(
   query: string,
