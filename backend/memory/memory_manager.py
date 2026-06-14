@@ -68,6 +68,8 @@ class MemoryManager:
         recommendation_summary: str,
     ) -> None:
         """Persist a search session as a vector memory entry."""
+        if not CHROMA_AVAILABLE:
+            return
         try:
             collection = _get_collection()
             doc_text = (
@@ -98,6 +100,8 @@ class MemoryManager:
     @staticmethod
     def recall_similar_searches(query: str, user_id: Optional[str] = None, n_results: int = 3) -> list[dict[str, Any]]:
         """Retrieve semantically similar past searches."""
+        if not CHROMA_AVAILABLE:
+            return []
         try:
             collection = _get_collection()
             where_filter = {"user_id": user_id} if user_id else None
