@@ -12,32 +12,24 @@ import logging
 import random
 from contextlib import asynccontextmanager
 
-from fake_useragent import UserAgent
-from playwright.async_api import Browser, BrowserContext, Page, async_playwright
+from playwright.async_api import Browser, BrowserContext, Page, Route, async_playwright
 
 from config import get_settings
 
 logger = logging.getLogger(__name__)
 
-_ua_generator: UserAgent | None = None
+_USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:125.0) Gecko/20100101 Firefox/125.0",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0",
+]
 
 
 def get_user_agent() -> str:
-    global _ua_generator
-    if _ua_generator is None:
-        try:
-            _ua_generator = UserAgent(platforms=["desktop"])
-        except Exception:
-            logger.warning("Failed to initialize fake-useragent, falling back to static User-Agent.")
-    if _ua_generator is not None:
-        try:
-            return _ua_generator.random
-        except Exception:
-            pass
-    return (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-    )
+    return random.choice(_USER_AGENTS)
 
 _VIEWPORTS = [
     {"width": 1366, "height": 768},
@@ -121,6 +113,16 @@ class BrowserManager:
         """Yield a new page within a fresh context. Closes context on exit."""
         async with self.new_context() as context:
             page: Page = await context.new_page()
+            
+            # Block images, fonts, and media to speed up scraping
+            async def block_media(route: Route):
+                if route.request.resource_type in ["image", "media", "font"]:
+                    await route.abort()
+                else:
+                    await route.continue_()
+            
+            await page.route("**/*", block_media)
+            
             settings = get_settings()
             page.set_default_timeout(settings.scraper_timeout_ms)
             try:
