@@ -8,6 +8,7 @@ import ProductCard from "@/components/ProductCard";
 import ComparisonTable from "@/components/ComparisonTable";
 import RecommendationSummary from "@/components/RecommendationSummary";
 import QuerySummary from "@/components/QuerySummary";
+import ThemeToggle from "@/components/ThemeToggle";
 import { searchProducts } from "@/lib/api";
 import type { SearchProductsResponse } from "@/types/api";
 import type { BadgeType } from "@/components/RecommendationBadge";
@@ -69,16 +70,19 @@ export default function Home() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-      <header className="mb-8 flex items-center gap-3">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-white">
-          <ShoppingBag className="h-6 w-6" />
+      <header className="mb-8 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-white dark:bg-brand-500">
+            <ShoppingBag className="h-6 w-6" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-slate-900 dark:text-zinc-50 sm:text-2xl">AI Shopping Agent</h1>
+            <p className="text-sm text-slate-500 dark:text-zinc-400">
+              Tell me what you need, and I&apos;ll search the web and find the best deals for you.
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-xl font-bold text-slate-900 sm:text-2xl">AI Shopping Agent</h1>
-          <p className="text-sm text-slate-500">
-            Tell me what you need, and I&apos;ll search the web and find the best deals for you.
-          </p>
-        </div>
+        <ThemeToggle />
       </header>
 
       <div className="mb-8">
@@ -86,15 +90,15 @@ export default function Home() {
       </div>
 
       {error && (
-        <div className="mb-6 flex items-center gap-2 rounded-2xl border border-red-100 bg-red-50 p-4 text-sm text-red-700">
+        <div className="mb-6 flex items-center gap-2 rounded-2xl border border-red-100 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900/30 dark:bg-red-950/20 dark:text-red-400">
           <AlertCircle className="h-5 w-5" />
           {error}
         </div>
       )}
 
       {loading && (
-        <div className="flex flex-col items-center justify-center gap-3 py-20 text-slate-500">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-brand-100 border-t-brand-600" />
+        <div className="flex flex-col items-center justify-center gap-3 py-20 text-slate-500 dark:text-zinc-400">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-brand-100 border-t-brand-600 dark:border-zinc-800 dark:border-t-brand-500" />
           <p className="text-sm">
             Searching Amazon, Flipkart, Croma and more — this can take a minute...
           </p>
@@ -108,7 +112,7 @@ export default function Home() {
           </section>
 
           <section>
-            <h2 className="mb-3 text-lg font-semibold text-slate-900">Top Recommendations</h2>
+            <h2 className="mb-3 text-lg font-semibold text-slate-900 dark:text-zinc-100">Top Recommendations</h2>
             <RecommendationSummary
               bestChoice={result.recommendation.best_choice}
               budgetChoice={result.recommendation.budget_choice}
@@ -131,11 +135,11 @@ export default function Home() {
             </div>
 
             <div className="lg:col-span-3">
-              <h2 className="mb-3 text-lg font-semibold text-slate-900">
+              <h2 className="mb-3 text-lg font-semibold text-slate-900 dark:text-zinc-100">
                 Products ({filteredProducts.length})
               </h2>
               {filteredProducts.length === 0 ? (
-                <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
+                <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400">
                   No products match your current filters.
                 </div>
               ) : (
@@ -154,7 +158,7 @@ export default function Home() {
 
           {result.recommendation.comparison_table.length > 0 && (
             <section>
-              <h2 className="mb-3 text-lg font-semibold text-slate-900">Comparison Table</h2>
+              <h2 className="mb-3 text-lg font-semibold text-slate-900 dark:text-zinc-100">Comparison Table</h2>
               <ComparisonTable rows={result.recommendation.comparison_table} />
             </section>
           )}
@@ -162,7 +166,7 @@ export default function Home() {
       )}
 
       {!loading && !result && !error && (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-slate-200 py-20 text-center text-slate-400">
+        <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-slate-200 py-20 text-center text-slate-400 dark:border-zinc-800 dark:text-zinc-500">
           <ShoppingBag className="h-10 w-10" />
           <p className="text-sm">
             Start by typing a query above, e.g. &quot;Best laptop under ₹50,000 for coding&quot;

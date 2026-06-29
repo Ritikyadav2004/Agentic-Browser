@@ -10,9 +10,9 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, badge }: ProductCardProps) {
   return (
-    <div className="flex flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md">
+    <div className="flex flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900">
       <div className="mb-3 flex items-start justify-between gap-2">
-        <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+        <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-zinc-800 dark:text-zinc-300">
           {product.source}
         </span>
         {badge && <RecommendationBadge type={badge} />}
@@ -23,7 +23,7 @@ export default function ProductCard({ product, badge }: ProductCardProps) {
           href={product.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="group/image mb-3 flex h-32 items-center justify-center overflow-hidden rounded-xl bg-slate-50"
+          className="group/image mb-3 flex h-32 items-center justify-center overflow-hidden rounded-xl bg-slate-50 dark:bg-zinc-800"
         >
           {product.image_url ? (
             <Image
@@ -35,11 +35,11 @@ export default function ProductCard({ product, badge }: ProductCardProps) {
               unoptimized
             />
           ) : (
-            <span className="text-xs text-slate-400">No image</span>
+            <span className="text-xs text-slate-400 dark:text-zinc-500">No image</span>
           )}
         </a>
       ) : (
-        <div className="mb-3 flex h-32 items-center justify-center overflow-hidden rounded-xl bg-slate-50">
+        <div className="mb-3 flex h-32 items-center justify-center overflow-hidden rounded-xl bg-slate-50 dark:bg-zinc-800">
           {product.image_url ? (
             <Image
               src={product.image_url}
@@ -50,24 +50,24 @@ export default function ProductCard({ product, badge }: ProductCardProps) {
               unoptimized
             />
           ) : (
-            <span className="text-xs text-slate-400">No image</span>
+            <span className="text-xs text-slate-400 dark:text-zinc-500">No image</span>
           )}
         </div>
       )}
 
       {product.url ? (
-        <a href={product.url} target="_blank" rel="noopener noreferrer" className="hover:text-brand-600">
-          <h3 className="mb-2 line-clamp-2 text-sm font-semibold text-slate-800 hover:underline" title={product.title}>
+        <a href={product.url} target="_blank" rel="noopener noreferrer" className="hover:text-brand-600 dark:hover:text-brand-400">
+          <h3 className="mb-2 line-clamp-2 text-sm font-semibold text-slate-800 hover:underline dark:text-zinc-200" title={product.title}>
             {product.title}
           </h3>
         </a>
       ) : (
-        <h3 className="mb-2 line-clamp-2 text-sm font-semibold text-slate-800" title={product.title}>
+        <h3 className="mb-2 line-clamp-2 text-sm font-semibold text-slate-800 dark:text-zinc-200" title={product.title}>
           {product.title}
         </h3>
       )}
 
-      <div className="mb-2 flex items-center gap-3 text-xs text-slate-500">
+      <div className="mb-2 flex items-center gap-3 text-xs text-slate-500 dark:text-zinc-400">
         {product.rating !== null && (
           <span className="flex items-center gap-1">
             <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
@@ -83,15 +83,15 @@ export default function ProductCard({ product, badge }: ProductCardProps) {
       </div>
 
       <div className="mb-3 flex items-center justify-between">
-        <span className="text-lg font-bold text-slate-900">
+        <span className="text-lg font-bold text-slate-900 dark:text-zinc-50">
           {product.price !== null ? `₹${product.price.toLocaleString("en-IN")}` : "—"}
         </span>
         {product.availability && (
           <span
             className={`text-xs font-medium ${
               product.availability.toLowerCase().includes("stock")
-                ? "text-emerald-600"
-                : "text-slate-400"
+                ? "text-emerald-600 dark:text-emerald-450"
+                : "text-slate-400 dark:text-zinc-550"
             }`}
           >
             {product.availability}
@@ -104,7 +104,7 @@ export default function ProductCard({ product, badge }: ProductCardProps) {
           href={product.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-auto inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2 text-sm font-medium text-slate-700 transition hover:border-brand-300 hover:text-brand-700"
+          className="mt-auto inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2 text-sm font-medium text-slate-700 transition hover:border-brand-300 hover:text-brand-700 dark:border-zinc-800 dark:text-zinc-300 dark:hover:border-brand-500/50 dark:hover:text-brand-400"
         >
           View on {product.source}
           <ExternalLink className="h-3.5 w-3.5" />

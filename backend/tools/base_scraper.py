@@ -45,8 +45,8 @@ class BaseScraper(ABC):
             return []
 
     @retry(
-        stop=stop_after_attempt(3),
-        wait=wait_exponential(multiplier=1, min=1, max=6),
+        stop=stop_after_attempt(2),
+        wait=wait_exponential(multiplier=1, min=1, max=3),
         retry=retry_if_exception_type((PlaywrightTimeoutError, ConnectionError)),
         reraise=True,
     )
@@ -54,7 +54,7 @@ class BaseScraper(ABC):
         url = self.build_search_url(keywords)
         async with browser_manager.new_page() as page:
             logger.info("[%s] Navigating to %s", self.SOURCE_NAME, url)
-            await page.goto(url, wait_until="domcontentloaded")
+            await page.goto(url, wait_until="domcontentloaded", timeout=self.settings.scraper_timeout_ms)
             await random_delay(500, 1500)
             try:
                 results = await self.scrape_listing(page, max_results)

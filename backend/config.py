@@ -35,8 +35,8 @@ class Settings(BaseSettings):
 
     # Scraper
     scraper_headless: bool = True
-    scraper_timeout_ms: int = 30000
-    scraper_max_retries: int = 3
+    scraper_timeout_ms: int = 10000
+    scraper_max_retries: int = 1
     scraper_max_products_per_site: int = 8
 
     # CORS
